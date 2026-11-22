@@ -1,7 +1,7 @@
 {
   "id": "waze-on-cluster",
   "kind": "tool",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "license": "GPL-3.0-or-later",
   "title": "Maps on cluster (HUD crop)",
   "description": "Runs the cluster map in the background, with the HUD map's bottom cut (hud_crop_bottom_pct). It replaces Maps on cluster's own service (the same id): remove that one first. It is controlled with the Maps on cluster app.",
