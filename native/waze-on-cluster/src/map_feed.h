@@ -90,6 +90,9 @@ struct FeedConfig {
     /* On the HUD: the map moved from its centred place, in the HUD scene's
      * pixels (+x right, +y down), held inside the HUD's scene. */
     int hud_offset_x = 0, hud_offset_y = 0;
+    /* On the HUD: this % of the map's bottom cut off (hud_crop.h), 0-60;
+     * only where the frame is scaled on the head unit (scale_down). */
+    unsigned hud_crop_bottom_pct = 0;
     /* On the HUD: kept shown over the stock HMI's pop-ups (the layer's
      * yield 0); else it gives way to them (cluster-render's hud_yield_slots). */
     bool hud_keep_shown = false;
@@ -250,6 +253,12 @@ private:
      * layer made again where it goes, or none while hidden. */
     void set_host(const cr::Host &h);
     bool hosted() const { return !host_.into.empty(); }
+    /* the HUD map's bottom cut (hud_crop_bottom_pct): on its own HUD
+     * target, scaled on the head unit (the cut is the scaler's crop) */
+    bool hud_cut() const
+    {
+        return cfg_.target == "hud" && cfg_.scale_down && cfg_.hud_crop_bottom_pct && !hosted();
+    }
     /* The target the layer is on: the host's, or the feed's own. */
     const std::string &drawn_target() const { return hosted() ? host_.into : cfg_.target; }
     /* A layer that scales: the scaled frame to the renderer, and the newest

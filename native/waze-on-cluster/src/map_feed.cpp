@@ -2,6 +2,8 @@
 // Copyright (C) 2026 Robert Nisipeanu
 #include "map_feed.h"
 
+#include "hud_crop.h"
+
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -181,6 +183,20 @@ void MapFeed::make_layer()
         shape_.level_bits = cfg_.scaled_level_bits;
         shape_.radius = cfg_.hud_round_corners ? (sh / 12 > 6 ? sh / 12 : 6) : 0;
         shape_.black = cfg_.hud_black_background;
+        if (hud_cut()) {
+            /* the picture's top rows only: the quad was cut alike (quad) */
+            const uint32_t rows = hud_cropped(cfg_.video.h, cfg_.hud_crop_bottom_pct);
+            if (sh <= rows) {
+                shape_.crop_x = 0;
+                shape_.crop_y = 0;
+                shape_.crop_w = cfg_.video.w;
+                shape_.crop_h = rows;
+                log_info("render: the HUD map's bottom %u %% cut: the picture's top %ux%u, shown %ux%u",
+                         cfg_.hud_crop_bottom_pct, cfg_.video.w, rows, sw, sh);
+            } else {
+                log_warn("render: the HUD map's bottom cut left out: shown %ux%u, more rows than the %u kept", sw, sh, rows);
+            }
+        }
     }
     /* a VPP-made picture is of no use to a layer of another part, or none */
     if (held_part_.set() && held_part_ != part_) {
@@ -262,6 +278,9 @@ crk::QuadRect MapFeed::quad(uint32_t tw, uint32_t th) const
         }
         q = crk::QuadRect{(uint32_t)((tw - w) / 2), (uint32_t)((th - h) / 2), (uint32_t)w, (uint32_t)h};
     }
+    /* the bottom cut: the same top and width, shorter (hud_crop.h) */
+    if (hud_cut())
+        q.h = hud_cropped(q.h, cfg_.hud_crop_bottom_pct);
     const long x = (long)q.x + cfg_.hud_offset_x, y = (long)q.y + cfg_.hud_offset_y;
     const long xmax = (long)tw - (long)q.w, ymax = (long)th - (long)q.h;
     const uint32_t cx = q.x, cy = q.y;

@@ -61,7 +61,7 @@ SRC     = $(WOC_SRC) $(CR_SRC) $(CR)/src/config.cpp $(CR)/src/log.cpp $(CR)/src/
 
 .PHONY: all test test-bin test-cpp test-node test-x86 test-x86-in-docker test-firmware target target-in-docker test-preload test-preload-in-docker clean
 
-CPP_TESTS = $(BUILD)/host/nal_reader_test $(BUILD)/host/rtp_h264_test $(BUILD)/host/udp_probe_test \
+CPP_TESTS = $(BUILD)/host/hud_crop_test $(BUILD)/host/nal_reader_test $(BUILD)/host/rtp_h264_test $(BUILD)/host/udp_probe_test \
 		$(BUILD)/host/map_feed_test $(BUILD)/host/keyframe_wait_test $(BUILD)/host/freeze_watch_test \
 		$(BUILD)/host/alt_screen_test $(BUILD)/host/packet_queue_test \
 		$(BUILD)/host/stream_health_test $(BUILD)/host/source_crop_test \
@@ -118,6 +118,7 @@ test-node:
 	umask 077 && $(NODE) patch/test/head_unit_test.js
 
 test-cpp: $(CPP_TESTS)
+	$(BUILD)/host/hud_crop_test
 	$(BUILD)/host/nal_reader_test
 	$(BUILD)/host/rtp_h264_test test/data/stream15_start.rtp
 	$(BUILD)/host/udp_probe_test
@@ -170,6 +171,10 @@ VP_SRC = test/video_producer_test.cpp test/fake_msdk.cpp src/video_producer.cpp 
 $(BUILD)/host/video_producer_test: $(VP_SRC) $(wildcard src/*.h) test/fake_msdk.h $(KIT)/yuv_atlas.h $(KIT)/frame_clock.h
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -Isrc -I$(KIT) -I$(CR)/src -Iabi/include -o $@ $(VP_SRC) -lpthread
+
+$(BUILD)/host/hud_crop_test: test/hud_crop_test.cpp src/hud_crop.h
+	mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -Isrc -o $@ test/hud_crop_test.cpp
 
 $(BUILD)/host/map_rect_test: test/map_rect_test.cpp src/map_rect.h
 	mkdir -p $(@D)

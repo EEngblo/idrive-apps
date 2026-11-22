@@ -205,7 +205,7 @@ int serve(Config cfg)
         {"cluster", 0, 1},          {"hud", 0, 1},                   {"hud_fps", 1, 30},
         {"hud_width_pct", 0, 100},  {"hud_offset_x", -800, 800},     {"hud_offset_y", -800, 800},
         {"hud_scale_down", 0, 1},   {"hud_round_corners", 0, 1},     {"hud_black_background", 0, 1},
-        {"hud_keep_shown", 0, 1},
+        {"hud_keep_shown", 0, 1},       {"hud_crop_bottom_pct", 0, 60},
         {"freeze_ms", 0, 600000},   {"freeze_min_fps", 1, 60},       {"alt_screen_port", 0, 65535},
         {"idle_ms", 1000, 600000},  {"blank_ms", 1000, 600000},
         {"alt_screen_uid", 0, 4294967294L}, {"gpu_copy", 0, 1},   {"hosted_vpp_scale", 0, 1},
@@ -255,6 +255,9 @@ int serve(Config cfg)
     }
     fc.hud_offset_x = (int)cfg.num("hud_offset_x");
     fc.hud_offset_y = (int)cfg.num("hud_offset_y");
+    fc.hud_crop_bottom_pct = (unsigned)cfg.num("hud_crop_bottom_pct");
+    if (fc.hud_crop_bottom_pct)
+        log_info("hud_crop_bottom_pct %u: the HUD map's bottom %u %% cut off", fc.hud_crop_bottom_pct, fc.hud_crop_bottom_pct);
     fc.hud_keep_shown = cfg.num("hud_keep_shown") != 0;
     fc.scale_down = cfg.num("hud_scale_down") != 0;
     fc.hud_round_corners = cfg.num("hud_round_corners") != 0;
@@ -519,6 +522,7 @@ void define_keys(Config *cfg)
     cfg->define("hud_width_pct", "0");
     cfg->define("hud_offset_x", "0");
     cfg->define("hud_offset_y", "0");
+    cfg->define("hud_crop_bottom_pct", "0");
     cfg->define("hud_keep_shown", "0");
     cfg->define("hud_scale_down", "1");
     cfg->define("hud_round_corners", "1");

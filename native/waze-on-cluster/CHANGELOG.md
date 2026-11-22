@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **The HUD map's bottom cut off** (`hud_crop_bottom_pct`, 12 % in this fork's conf: the default-size map ends above BMW's speed row): the map
+  keeps its top, place and width and is only shorter; the picture's bottom rows (the road
+  already driven) are left out, not squeezed, so it stays clear of BMW's speed and limit
+  sign, and other apps (PuigHud) use the rows freed under it. Also in `map.state.conf`.
+
 ## 0.13.0
 
 Android Auto's cluster map patch is applied in aapd's memory each time it

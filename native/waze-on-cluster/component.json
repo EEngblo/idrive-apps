@@ -3,8 +3,8 @@
   "kind": "tool",
   "version": "0.13.0",
   "license": "GPL-3.0-or-later",
-  "title": "Maps on cluster",
-  "description": "Runs the cluster map in the background. It is installed with the Maps on cluster app, which you use to control it.",
+  "title": "Maps on cluster (HUD crop)",
+  "description": "Runs the cluster map in the background, with the HUD map's bottom cut (hud_crop_bottom_pct). It replaces Maps on cluster's own service (the same id): remove that one first. It is controlled with the Maps on cluster app.",
   "requires": {
     "mgu-deploy": "0.7.17",
     "cluster-render": "0.5.3"
